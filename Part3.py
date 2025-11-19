@@ -1,4 +1,4 @@
-# #Helper method to sort the ratio values
+# # #Helper method to sort the ratio values
 def mergeSort(arr):
     if len(arr) <= 1:
         return arr
@@ -15,42 +15,48 @@ def mergeSort(arr):
 
 def merge(left, right):
     result = []
-    indexes = []
     i, j = 0,0
 
-    #Compares each element, and adds the largest element to the beginning of the list
+    #Compares each element, the element with the largest ratio is sorted.
     while i < len(left) and j < len(right):
-        if left[i] > right[j]:
+        if left[i][0]/left[i][1] > right[j][0]/right[j][1]:
             result.append(left[i])
             i+=1
         else:
             result.append(right[j])
             j+=1
-    
-    #Handles the largest values
+
+    #Handles the smallest remaining values
     result.extend(left[i:])
     result.extend(right[j:])
 
     return result
     
 
-def FractionalNapsackProblem(values, weights):
+def fractionalNapsackProblem(values, weights):
     #Create an array to represent value/weight ratio
-    ratios = []
-    for i in range(values):
-        ratios[i] = values[i] / weights[i]
-    
-    #Sort the array from ascending to descending
+    ratios = [[values[i], weights[i]] for i in range(len(values))]
+    #Sort from ascending to descending
     ratios = mergeSort(ratios)
-
-    #Now that the ratios are sorted, do the fractional napsack problem
-    remaining = 1.0
+    
+    #Use the max weight in percentage to calculate the max amount we can take
+    totalValue = 0.0
+    remainingWeight = 1.0
     i = 0
-    value = 0
-    while remaining > 0 and i < len(values):
-        value += ratios[i] * weights
-
+    #While there are still objects and weight
+    while remainingWeight > 0.0 and i < len(ratios):
+        # print(totalValue)
+        #If there is insufficient weight, drop it
+        if remainingWeight < ratios[i][1]:
+            pass
+        #Otherwise, add it to the bag
+        else:
+            print(ratios[i])
+            totalValue += ratios[i][0]
+            remainingWeight -= ratios[i][1]
+        i += 1
+    return totalValue
     
 
 #Test if mergesort works
-print(mergeSort([1,2,3,4,5,99,4,71,17,24,2,5,6]))
+print(fractionalNapsackProblem([100, 25, 7, 8, 13, 250, 13, 62, 97], [0.1, 0.5, 0.2, 0.1, 0.1, 0.6, 0.5, 0.2, 0.5]))
